@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المتعاون | Cooperative App</title>
+    <style>
+/* 🌐 إعداد عام */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap'); 
+body {
+    font-family: 'Cairo', sans-serif;
+    /*background-image: url('background.jpg'); */
+    background: linear-gradient(135deg, #023e8a, #0077b6); /* خلفية تدرجية كبديل لـ background.jpg */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f0f0f0; 
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    direction: rtl;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+} 
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); 
+    z-index: -1;
+}
+/* 🧱 الصفحات */
+.page {
+    display: none;
+    padding: 20px;
+    flex-grow: 1; 
+    justify-content: center;
+    align-items: center;
+}
+.page.active {
+    display: flex; 
+}
+.hidden {
+    display: none !important;
+} 
+/* 📋 مربعات النماذج */
+.form-box {
+    background: rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(10px); 
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    width: 90%;
+    margin: 50px auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.form-box h2 {
+    color: #90e0ef; 
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+.form-box input {
+    width: calc(100% - 20px); 
+    padding: 12px 10px;
+    margin: 10px 0;
+    border: 1px solid #0077b6; 
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.4); 
+    color: #fff;
+    font-size: 1em;
+}
+.form-box input::placeholder {
+    color: #ccc;
+}
+.form-box button {
+    background: #0077b6;
+    color: #fff;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+.form-box button:hover {
+    background: #023e8a;
+    transform: translateY(-2px);
+} 
+/* 🏠 الصفحة الرئيسية */
+#home-section {
+    flex-direction: column; 
+}
+header {
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(8px);
+    border-bottom: 3px solid #0077b6;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+header h1 {
+    margin: 0;
+    color: #90e0ef;
+    font-size: 1.6em;
+}
+.app-logo {
+    width: 60px; 
+    height: 60px;
+    border-radius: 10px;
+    object-fit: contain;
+    /* يجب توفير icon.png منفصلاً */
+}
+.top-actions {
+    display: flex;
+    gap: 10px; 
+}
+.top-actions button {
+    background: rgba(255, 255, 255, 0.15); 
+    border: 1px solid #0077b6;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.top-actions button:hover {
+    background: #0077b6;
+}
+/* 🔘 أزرار القائمة */
+main.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+    gap: 15px; 
+    margin: 30px auto;
+    max-width: 1000px; 
+    width: 90%;
+}
+main.menu button {
+    background: rgba(0, 0, 0, 0.4); 
+    color: #fff;
+    padding: 20px; 
+    border: 1px solid #0077b6; 
+    border-radius: 12px; 
+    font-size: 1.1em; 
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+main.menu button:hover {
+    background: #0077b6;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+} 
+/* 📱 الإطارات للأقسام الداخلية */
+#sectionFrame {
+    width: 100%;
+    flex-grow: 1;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.9); 
+    border-top: 3px solid #0077b6;
+} 
+/* 🧭 اللغة والاتصال */
+#langBtn { background: #00b4d8; }
+#whatsappBtn { background: #25d366; }
+#notifBtn { background: #ffb703; }
+.back-to-home-btn {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s ease;
+}
+.back-to-home-btn:hover {
+    background: #023e8a;
+}
+    </style>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+</head>
+<body> 
+
+    <section id="register-section" class="page active"> 
+        <div class="form-box">
+            <h2 data-i18n="registerTitle">تسجيل التعاونية / المقاولة</h2>
+            <input type="text" id="orgName" placeholder="اسم التعاونية أو المقاولة" required>
+            <input type="text" id="address" placeholder="العنوان الكامل" required>
+            <input type="text" id="city" placeholder="المدينة" required>
+            <input type="text" id="country" placeholder="البلد" required>
+            <input type="tel" id="phone" placeholder="رقم الهاتف" required>
+            <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            <button id="saveRegistration" data-i18n="saveRegistration">تسجيل وحفظ</button>
+        </div>
+    </section> 
+
+    <section id="login-section" class="page hidden">
+        <div class="form-box">
+            <h2 data-i18n="loginTitle">تسجيل الدخول</h2>
+            <input type="text" id="loginName" placeholder="اسم التعاونية المسجل" required>
+            <input type="password" id="loginPass" placeholder="كلمة المرور" required>
+            <button id="loginBtn" data-i18n="loginBtn">دخول</button>
+        </div>
+    </section> 
+
+    <section id="home-section" class="page hidden">
+        <header>
+            <img src="icon.png" class="app-logo" alt="شعار المتعاون">
+            <h1 id="welcomeText" data-i18n="welcome">مرحبًا بك في تطبيق المتعاون 🤝</h1>
+            <div class="top-actions">
+                <button id="langBtn"><span class="material-icons">language</span></button>
+                <button id="whatsappBtn"><span class="material-icons">chat</span></button>
+                <button id="notifBtn"><span class="material-icons">notifications</span></button>
+            </div>
+        </header> 
+
+        <main class="menu">
+            <button data-target="sales"><span class="material-icons">trending_up</span> قسم المبيعات والمداخيل</button>
+            <button data-target="expenses"><span class="material-icons">payments</span> قسم المصاريف والمشتريات</button>
+            <button data-target="reports"><span class="material-icons">assessment</span> التقارير المالية السنوية</button>
+            <button data-target="meetings"><span class="material-icons">event_note</span> المحاضر والاجتماعات</button>
+            <button data-target="storage"><span class="material-icons">inventory_2</span> إدارة التخزين</button>
+            <button data-target="ai-videos"><span class="material-icons">smart_display</span> إنشاء الفيديوهات بالذكاء الاصطناعي</button>
+            <button data-target="my-videos"><span class="material-icons">video_library</span> فيديوهاتي الترويجية</button>
+            <button data-target="marketing"><span class="material-icons">campaign</span> التسويق الرقمي</button>
+            <button data-target="training"><span class="material-icons">school</span> الدورات التعليمية</button>
+            <button data-target="news"><span class="material-icons">newspaper</span> أخبار المعارض والأنشطة</button>
+            <button data-target="about"><span class="material-icons">info</span> من نحن</button>
+            <button data-target="privacy"><span class="material-icons">privacy_tip</span> السياسة والخصوصية</button>
+        </main>
+    </section> 
+
+    <section id="dynamic-section" class="page hidden" style="flex-direction: column; width: 100%; max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.9); color: #222;">
+        </section>
+
+    <script>
+        // 🌟 المتغيرات الثابتة لربط التطبيق 🌟
+        const ADMIN_EMAIL = 'morad25morad75@gmail.com';
+        const ADMIN_WHATSAPP = '00212607620636'; 
+
+        // 🌍 إعداد اللغة
+        let currentLang = localStorage.getItem('lang') || 'ar';
+        const langData = {
+          ar: {
+            welcome: "مرحبًا بك في تطبيق المتعاون 🤝",
+            registerTitle: "تسجيل التعاونية / المقاولة",
+            loginTitle: "تسجيل الدخول",
+            name: "اسم التعاونية أو المقاولة",
+            address: "العنوان الكامل",
+            city: "المدينة",
+            country: "البلد",
+            phone: "رقم الهاتف",
+            email: "البريد الإلكتروني",
+            saveRegistration: "تسجيل وحفظ",
+            loginNamePlaceholder: "اسم التعاونية المسجل",
+            loginPassPlaceholder: "كلمة المرور",
+            loginBtn: "دخول",
+            logout: "تسجيل الخروج",
+          },
+          // ... (بقية اللغات مختصرة للحجم)
+        }; 
+
+        // 🌐 تبديل اللغة
+        function changeLang() {
+          const langs = ['ar', 'en', 'fr', 'es'];
+          const nextIndex = (langs.indexOf(currentLang) + 1) % langs.length;
+          currentLang = langs[nextIndex];
+          localStorage.setItem('lang', currentLang);
+          updateTexts();
+        } 
+
+        function updateTexts() {
+          const t = langData[currentLang];
+          document.querySelector('#welcomeText').innerText = t.welcome;
+          document.querySelector('#register-section h2').innerText = t.registerTitle;
+          document.querySelector('#login-section h2').innerText = t.loginTitle;
+          document.getElementById('orgName').placeholder = t.name;
+          document.getElementById('address').placeholder = t.address;
+          document.getElementById('city').placeholder = t.city;
+          document.getElementById('country').placeholder = t.country;
+          document.getElementById('phone').placeholder = t.phone;
+          document.getElementById('email').placeholder = t.email;
+          document.getElementById('saveRegistration').innerText = t.saveRegistration;
+          document.getElementById('loginName').placeholder = t.loginNamePlaceholder;
+          document.getElementById('loginPass').placeholder = t.loginPassPlaceholder;
+          document.getElementById('loginBtn').innerText = t.loginBtn;
+        } 
+
+        // 🧾 التسجيل (ربط زر saveRegistration) - تم التعديل لإضافة إرسال البريد
+        document.getElementById('saveRegistration').addEventListener('click', () => {
+          const orgName = document.getElementById('orgName').value.trim();
+          const address = document.getElementById('address').value.trim();
+          const city = document.getElementById('city').value.trim();
+          const country = document.getElementById('country').value.trim();
+          const phone = document.getElementById('phone').value.trim();
+          const email = document.getElementById('email').value.trim();
+          
+          if (!orgName || !city || !country || !phone || !email) {
+              alert('⚠️ يرجى ملء جميع الحقول المطلوبة (الاسم، المدينة، البلد، الهاتف، البريد الإلكتروني).');
+              return;
+          }
+          
+          const coopData = { orgName, address, city, country, phone, email, pass: '2025' };
+          
+          // 1. حفظ البيانات محليا
+          localStorage.setItem('coopData', JSON.stringify(coopData));
+          
+          // 2. إعداد رسالة البريد الإلكتروني للمطور
+          const subject = encodeURIComponent(`تسجيل جديد: ${orgName}`);
+          const body = encodeURIComponent(
+              `تم تسجيل تعاونية جديدة:\n` +
+              `الاسم: ${orgName}\n` +
+              `العنوان: ${address}\n` +
+              `المدينة: ${city}\n` +
+              `البلد: ${country}\n` +
+              `الهاتف: ${phone}\n` +
+              `البريد: ${email}\n`
+          );
+          
+          // 3. فتح تطبيق البريد (mailto)
+          window.location.href = `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+          
+          // 4. التنبيه والتحويل بعد فتح نافذة البريد
+          alert('✅ تم حفظ بيانات التسجيل! يرجى إرسال البريد الذي سيظهر لتأكيد تفعيل حسابك. كلمة المرور هي: 2025');
+          showSection('login-section');
+        });
+
+        // 🔐 تسجيل الدخول (ربط زر loginBtn)
+        document.getElementById('loginBtn').addEventListener('click', () => {
+          const coopData = JSON.parse(localStorage.getItem('coopData') || '{}');
+          const inputName = document.getElementById('loginName').value.trim();
+          const inputPass = document.getElementById('loginPass').value.trim();
+          
+          if (inputName === coopData.orgName && inputPass === coopData.pass) {
+            alert('✅ تم تسجيل الدخول بنجاح');
+            showSection('home-section');
+          } else {
+            alert('❌ البيانات غير صحيحة. كلمة المرور الافتراضية هي 2025.');
+          }
+        });
+
+        // 📱 دالة عرض الأقسام (للتنقل بين register/login/home/dynamic-section)
+        function showSection(id) {
+            document.querySelectorAll('.page').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(sec => sec.classList.add('hidden'));
+            
+            if (document.getElementById(id)) {
+                document.getElementById(id).classList.add('active');
+                document.getElementById(id).classList.remove('hidden');
+            }
+        }
+        
+        // 📱 فتح الأقسام الداخلية (ربط أزرار القائمة)
+        document.querySelectorAll('main.menu button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const target = e.currentTarget.getAttribute('data-target');
+                openSection(target);
+            });
+        });
+
+        // ------------------------------------
+        // الدوال المساعدة (وظائف الأقسام)
+        function loadSectionContent(content) {
+            const dynamicSection = document.getElementById('dynamic-section');
+            dynamicSection.innerHTML = content;
+            showSection('dynamic-section');
+            const scripts = dynamicSection.querySelectorAll('script');
+            scripts.forEach(s => {
+                const newScript = document.createElement('script');
+                newScript.textContent = s.textContent;
+                dynamicSection.appendChild(newScript);
+            });
+        }
+        function getTodayDate() { return new Date().toISOString().split('T')[0]; }
+
+        function addSale() {
+            let sales = JSON.parse(localStorage.getItem("sales")) || [];
+            const date = document.getElementById("saleDate").value || getTodayDate();
+            const name = document.getElementById("productName").value;
+            const price = parseFloat(document.getElementById("price").value);
+            const qty = parseInt(document.getElementById("quantity").value);
+            if (!name || isNaN(price) || isNaN(qty) || price <= 0 || qty <= 0) { alert("⚠️ يرجى إدخال بيانات صحيحة."); return; }
+            const total = price * qty;
+            sales.push({ date, name, price, qty, total });
+            localStorage.setItem("sales", JSON.stringify(sales));
+            openSection('sales'); 
+        }
+        function addExpense() {
+            let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            const date = document.getElementById("expDate").value || getTodayDate();
+            const name = document.getElementById("expName").value;
+            const amount = parseFloat(document.getElementById("expAmount").value);
+            if (!name || isNaN(amount) || amount <= 0) { alert("⚠️ يرجى إدخال بيانات صحيحة."); return; }
+            expenses.push({ date, name, amount });
+            localStorage.setItem("expenses", JSON.stringify(expenses));
+            openSection('expenses');
+        }
+        function generateReport() {
+            const start = new Date(document.getElementById("startDate").value);
+            const end = new Date(document.getElementById("endDate").value);
+            if (isNaN(start) || isNaN(end) || start > end) { alert("⚠️ يرجى تحديد تاريخ بداية ونهاية صحيحين."); return; }
+            const sales = JSON.parse(localStorage.getItem("sales")) || [];
+            const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+            let totalSales = 0; let totalExp = 0;
+            sales.forEach(s => {
+                const saleDate = new Date(s.date);
+                if (saleDate >= start && saleDate <= end) { totalSales += s.total; }
+            });
+            expenses.forEach(e => {
+                const expDate = new Date(e.date);
+                if (expDate >= start && expDate <= end) { totalExp += e.amount; }
+            });
+            const profit = totalSales - totalExp;
+            const profitColor = profit >= 0 ? '#28a745' : '#dc3545';
+            document.getElementById("reportArea").innerHTML = `
+                <h3>📅 الفترة من: ${document.getElementById("startDate").value} إلى: ${document.getElementById("endDate").value}</h3>
+                <hr style="border-color: #0077b6; margin: 10px 0;">
+                <p>💰 إجمالي المداخيل: <strong>${totalSales.toFixed(2)}</strong></p>
+                <p>💸 إجمالي المصاريف: <strong>${totalExp.toFixed(2)}</strong></p>
+                <h2 style="color: ${profitColor};">الربح الصافي: ${profit.toFixed(2)}</h2>`;
+        }
+        function printReport() {
+            const reportContent = document.getElementById("reportArea").innerHTML;
+            const w = window.open("", "_blank");
+            w.document.write("<html><head><title>التقرير المالي</title></head><body dir='rtl' style='font-family: Arial, sans-serif;'>");
+            w.document.write("<h2>📊 التقرير المالي لتطبيق المتعاون</h2>");
+            w.document.write(reportContent);
+            w.document.write("</body></html>");
+            w.document.close();
+            w.print();
+        }
+        function saveMeeting() {
+            let meets = JSON.parse(localStorage.getItem("meetings")) || [];
+            const text = document.getElementById("meetingText").value;
+            if (!text.trim()) { alert("⚠️ يرجى كتابة محضر الاجتماع."); return; }
+            meets.push({ text, date: new Date().toLocaleDateString() });
+            localStorage.setItem("meetings", JSON.stringify(meets));
+            openSection('meetings');
+        }
+        function addItem() {
+            let storage = JSON.parse(localStorage.getItem("storage")) || [];
+            const name = document.getElementById("itemName").value;
+            const qty = parseInt(document.getElementById("itemQty").value);
+            if (!name || isNaN(qty) || qty <= 0) { alert("⚠️ يرجى إدخال بيانات صحيحة."); return; }
+            storage.push({ name, qty });
+            localStorage.setItem("storage", JSON.stringify(storage));
+            openSection('storage');
+        }
+        function saveVideo(title,desc){
+            const vids = JSON.parse(localStorage.getItem("myVideos")) || [];
+            vids.push({title, desc, date: new Date().toLocaleString()});
+            localStorage.setItem("myVideos", JSON.stringify(vids));
+            alert("✅ تم حفظ الفيديو في قسم فيديوهاتي");
+            openSection('my-videos');
+        }
+        function generateVideo() {
+            const title = document.getElementById('videoTitle').value;
+            if (!title.trim()) { alert("⚠️ يرجى إدخال عنوان الفيديو."); return; }
+            const desc = document.getElementById('videoDesc').value;
+            document.getElementById('videoResult').innerHTML =
+            `<h3 style="color: #023e8a;">تم إنشاء الفيديو بعنوان: ${title}</h3>
+             <div style="background: #eee; height: 180px; display: flex; justify-content: center; align-items: center; border-radius: 8px; margin: 10px 0; color: #333;">
+                 <p>⚠️ فيديو تجريبي: هنا سيظهر الفيديو بعد المعالجة</p>
+             </div>
+             <button onclick="saveVideo('${title.replace(/'/g, "\\'")}', '${desc.replace(/'/g, "\\'")}')" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-top: 10px;">💾 حفظ في فيديوهاتي</button>`;
+        }
+        function saveSocials(){
+            const soc = {
+                fb: document.getElementById('fb').value,
+                ig: document.getElementById('ig').value,
+                tt: document.getElementById('tt').value,
+                yt: document.getElementById('yt').value
+            };
+            localStorage.setItem("socials", JSON.stringify(soc));
+            alert("✅ تم حفظ روابط التواصل");
+            openSection('marketing');
+        }
+        
+        // ------------------------------------
+
+        function openSection(section) {
+            let content = '';
+            
+            switch (section) {
+                case 'sales': 
+                    let sales = JSON.parse(localStorage.getItem("sales")) || [];
+                    let salesRows = sales.reverse().map(s => `<tr><td>${s.date}</td><td>${s.name}</td><td>${s.price.toFixed(2)}</td><td>${s.qty}</td><td>${s.total.toFixed(2)}</td></tr>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">💰 سجل المبيعات والمداخيل</h2>
+                        <form id="salesForm" style="display: flex; flex-direction: column; align-items: center;">
+                            <input type="date" id="saleDate" value="${getTodayDate()}" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; border: 1px solid #ccc; text-align: right; color: #222;" required>
+                            <input type="text" placeholder="اسم المنتج" id="productName" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="number" placeholder="الثمن" id="price" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="number" placeholder="الكمية" id="quantity" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <button type="button" onclick="addSale()" style="width: 80%; max-width: 300px; background: #0077b6; color: white; padding: 10px; margin-top: 10px;">➕ إضافة</button>
+                        </form> 
+                        <table id="salesTable" border="1" style="width: 90%; max-width: 600px; margin: 20px auto; border-collapse: collapse; background: #fff; color: #222;">
+                            <tr style="background-color: #0077b6; color: white;"><th>التاريخ</th><th>المنتج</th><th>الثمن</th><th>الكمية</th><th>المجموع</th></tr>
+                            ${salesRows}
+                        </table> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'expenses':
+                    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+                    let expRows = expenses.reverse().map(e => `<tr><td>${e.date}</td><td>${e.name}</td><td>${e.amount.toFixed(2)}</td></tr>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">💸 سجل المصاريف والمشتريات</h2>
+                        <form id="expForm" style="display: flex; flex-direction: column; align-items: center;">
+                            <input type="date" id="expDate" value="${getTodayDate()}" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; border: 1px solid #ccc; text-align: right; color: #222;" required>
+                            <input type="text" placeholder="اسم المصروف" id="expName" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="number" placeholder="المبلغ" id="expAmount" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <button type="button" onclick="addExpense()" style="width: 80%; max-width: 300px; background: #0077b6; color: white; padding: 10px; margin-top: 10px;">➕ إضافة</button>
+                        </form> 
+                        <table id="expTable" border="1" style="width: 90%; max-width: 600px; margin: 20px auto; border-collapse: collapse; background: #fff; color: #222;">
+                            <tr style="background-color: #0077b6; color: white;"><th>التاريخ</th><th>البيان</th><th>المبلغ</th></tr>
+                            ${expRows}
+                        </table> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'reports':
+                    content = `
+                        <h2 style="color: #0077b6;">📊 التقرير المالي السنوي</h2>
+                        <div style="width: 90%; max-width: 400px; margin: 20px auto; text-align: center; color: #222;">
+                            <label>📈 تقرير الفترة:</label>
+                            <input type="date" id="startDate" style="width: 100%; margin: 5px 0; color: #222;">
+                            <input type="date" id="endDate" style="width: 100%; margin: 5px 0; color: #222;">
+                        </div>
+                        <button onclick="generateReport()" style="background: #0077b6; color: white; padding: 10px 20px; border: none; border-radius: 8px;">إنشاء التقرير</button>
+                        <button onclick="printReport()" style="background: #023e8a; color: white; padding: 10px 20px; border: none; border-radius: 8px; margin-right: 10px;">🖨️ طباعة</button>
+                        <div id="reportArea" style="margin-top: 30px; text-align: right; padding: 20px; border: 1px solid #ccc; border-radius: 8px; width: 90%; max-width: 600px; margin-left: auto; margin-right: auto; background: #fff; color: #222;">
+                            <p>حدد فترة واضغط على "إنشاء التقرير".</p>
+                        </div>
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'storage':
+                    let storage = JSON.parse(localStorage.getItem("storage")) || [];
+                    let storageRows = storage.map(i => `<tr><td>${i.name}</td><td>${i.qty}</td></tr>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">📦 إدارة التخزين</h2>
+                        <form id="storageForm" style="display: flex; flex-direction: column; align-items: center;">
+                            <input type="text" id="itemName" placeholder="اسم المنتج" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="number" id="itemQty" placeholder="الكمية" style="width: 80%; max-width: 300px; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <button type="button" onclick="addItem()" style="width: 80%; max-width: 300px; background: #0077b6; color: white; padding: 10px; margin-top: 10px;">➕ إضافة</button>
+                        </form> 
+                        <table id="storageTable" border="1" style="width: 90%; max-width: 600px; margin: 20px auto; border-collapse: collapse; background: #fff; color: #222;">
+                            <tr style="background-color: #0077b6; color: white;"><th>المنتج</th><th>الكمية</th></tr>
+                            ${storageRows}
+                        </table> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'meetings':
+                    let meets = JSON.parse(localStorage.getItem("meetings")) || [];
+                    let meetItems = meets.reverse().map(m => `<li style="border-bottom: 1px dashed #ccc; padding: 8px 0;"><strong>${m.date}</strong>: ${m.text}</li>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">📝 سجل الاجتماعات والمحاضر</h2>
+                        <textarea id="meetingText" rows="6" placeholder="اكتب محضر الاجتماع هنا..." style="width: 90%; max-width: 500px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin: 10px 0; color: #222; background: #fff;"></textarea>
+                        <button onclick="saveMeeting()" style="background: #0077b6; color: white; padding: 10px 20px; border: none; border-radius: 8px;">حفظ</button>
+                        <ul id="meetList" style="list-style-type: none; padding: 0; width: 90%; max-width: 500px; margin: 20px auto; text-align: right; color: #222;">
+                            ${meetItems}
+                        </ul> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'ai-videos':
+                    content = `
+                        <h2 style="color: #0077b6;">🎬 إنشاء فيديو ترويجي بالذكاء الاصطناعي</h2>
+                        <p style="color: #222;">أنشئ فيديو احترافي لمنتجاتك بسهولة!</p> 
+                        <form id="videoForm" style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 500px; margin: 0 auto;">
+                            <input type="text" id="videoTitle" placeholder="عنوان الفيديو" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <textarea id="videoDesc" placeholder="وصف الفيديو" rows="4" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;"></textarea>
+                            <button type="button" onclick="generateVideo()" style="width: 100%; background: #0077b6; color: white; padding: 12px; margin-top: 10px;">🎥 إنشاء الفيديو</button>
+                        </form> 
+                        <div id="videoResult" style="margin-top: 20px; color: #222;"></div> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'my-videos':
+                    let vids = JSON.parse(localStorage.getItem("myVideos")) || [];
+                    let vidItems = vids.reverse().map(v => `<li style="border-bottom: 1px dashed #ccc; padding: 8px 0;"><strong>${v.title}</strong> - ${v.date}<br>${v.desc}</li>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">📹 فيديوهاتي الترويجية</h2>
+                        <ul id="myVideosList" style="list-style-type: none; padding: 0; width: 90%; max-width: 600px; margin: 20px auto; text-align: right; color: #222;">
+                            ${vids.length === 0 ? "<p>📂 لا توجد فيديوهات بعد</p>" : vidItems}
+                        </ul> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'marketing':
+                    let socials = JSON.parse(localStorage.getItem("socials")) || {};
+                    let linksHtml = 
+                        `<p>🌐 روابطك:</p>
+                         <p style="text-align: center;">
+                         <a href="${socials.fb || '#'}" target="_blank">فيسبوك</a> |
+                         <a href="${socials.ig || '#'}" target="_blank">انستغرام</a> |
+                         <a href="${socials.tt || '#'}" target="_blank">تيك توك</a> |
+                         <a href="${socials.yt || '#'}" target="_blank">يوتيوب</a>
+                         </p>`;
+                    content = `
+                        <h2 style="color: #0077b6;">📢 التسويق الرقمي والترويج</h2>
+                        <p style="color: #222;">قم بربط حساباتك الاجتماعية لزيادة انتشارك!</p> 
+                        <form style="display: flex; flex-direction: column; align-items: center; width: 90%; max-width: 500px; margin: 0 auto;">
+                            <input type="url" id="fb" placeholder="رابط حساب فيسبوك" value="${socials.fb || ''}" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="url" id="ig" placeholder="رابط انستغرام" value="${socials.ig || ''}" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="url" id="tt" placeholder="رابط تيك توك" value="${socials.tt || ''}" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <input type="url" id="yt" placeholder="رابط يوتيوب" value="${socials.yt || ''}" style="width: 100%; padding: 10px; margin: 5px; color: #222; background: #fff;">
+                            <button type="button" onclick="saveSocials()" style="width: 100%; background: #0077b6; color: white; padding: 12px; margin-top: 10px;">💾 حفظ الروابط</button>
+                        </form> 
+                        <div id="linksDisplay" style="margin-top: 20px; color: #222;">${linksHtml}</div> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'training':
+                    const trainingCourses = [
+                        {title:"إدارة التعاونية بنجاح", src:"https://www.youtube.com/embed/g2J0-Y1yY4s", desc: "دورة مكثفة في التسيير الإداري"},
+                        {title:"كيفية التسويق الرقمي الفعال", src:"https://www.youtube.com/embed/V61gB2bH62M", desc: "أساسيات الترويج عبر منصات التواصل"},
+                    ];
+                    let courseHtml = trainingCourses.map(v => 
+                        `<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9; text-align: right; color: #222;">
+                            <h4 style="color: #023e8a; margin-top: 0;">${v.title}</h4>
+                            <p style="font-size: 0.9em;">${v.desc}</p>
+                            <iframe width="100%" height="200" src="${v.src}" frameborder="0" allowfullscreen style="border-radius: 5px;"></iframe>
+                        </div>`).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">🎓 الدورات التعليمية والتكوينية</h2>
+                        <div id="trainingVideos" style="text-align: center; width: 90%; max-width: 600px; margin: 20px auto; color: #222;">
+                            ${courseHtml}
+                        </div> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'news':
+                    const newsData = {results:[{title:"أخبار تجريبية: معرض المنتجات الوطنية في الرباط", description:"يُقام المعرض في الفترة من 10 إلى 15 ديسمبر.", link:"#"}, {title:"أخبار تجريبية: دعم التعاونيات الشبابية", description:"برنامج جديد لدعم المشاريع الصغرى.", link:"#"}]}; 
+                    let newsHtml = newsData.results.slice(0,10).map(n=>{
+                        return `<div style="border:1px solid #ccc;margin:8px;padding:8px;border-radius:6px; background: #fff;">
+                            <h4>${n.title}</h4>
+                            <p>${n.description || ''}</p>
+                            <a href="${n.link}" target="_blank">🔗 قراءة المزيد</a>
+                        </div>`;
+                    }).join('');
+                    content = `
+                        <h2 style="color: #0077b6;">📰 أخبار المعارض التجارية</h2>
+                        <div id="newsList" style="width: 90%; max-width: 600px; margin: 20px auto; text-align: right; color: #222;">
+                            ${newsHtml}
+                        </div> 
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'about':
+                    content = `
+                        <h2 style="color: #0077b6;">ℹ️ من نحن</h2>
+                        <div style="padding: 20px; width: 90%; max-width: 600px; margin: 20px auto; text-align: right; background: #f9f9f9; border-radius: 8px; color: #222;">
+                            <p>تطبيق <strong>المتعاون</strong> هو منصة ذكية لتسيير المقاولات والتعاونيات.</p>
+                            <p>نهدف إلى تسهيل التسيير المالي والإداري والتسويقي عبر أدوات الذكاء الاصطناعي.</p>
+                        </div>
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                case 'privacy':
+                    content = `
+                        <h2 style="color: #0077b6;">🔒 سياسة الخصوصية</h2>
+                        <div style="padding: 20px; width: 90%; max-width: 600px; margin: 20px auto; text-align: right; background: #f9f9f9; border-radius: 8px; color: #222;">
+                            <p>نحن نحترم خصوصيتك. يتم حفظ البيانات محليًا فقط داخل جهازك باستخدام LocalStorage ولا يتم مشاركتها مع أي جهة خارجية.</p>
+                            <p>البيانات المسجلة (مثل رقم الهاتف والبريد) تستخدم فقط لعملية التفعيل والاتصال المباشر عبر الواتساب/البريد.</p>
+                            <p><strong>ملاحظة للمطور:</strong> يجب عليك إنشاء صفحة سياسة خصوصية خارجية مستقلة ووضع رابطها هنا قبل الرفع على Google Play.</p>
+                        </div>
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+                    break;
+                default:
+                    content = `
+                        <h2 style="color: #0077b6;">قريباً</h2>
+                        <p style="color: #222;">هذا القسم قيد الإنشاء.</p>
+                        <button class="back-to-home-btn" onclick="showSection('home-section')">🏠 العودة للقائمة الرئيسية</button>
+                    `;
+            }
+            
+            loadSectionContent(content);
+        }
+
+        // 🔔 التنبيهات و الواتساب - تم التعديل لتثبيت رقمك
+        document.getElementById('notifBtn').addEventListener('click', () => {
+            alert("🔔 لا توجد تنبيهات جديدة حاليًا.");
+        });
+
+        document.getElementById('whatsappBtn').addEventListener('click', () => {
+             // استخدام الرقم الثابت الذي طلبته
+             window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=مرحباً، أود الاستفسار بخصوص التطبيق.`, '_system'); 
+        });
+
+        // 🧠 تحميل أولي
+        document.addEventListener('DOMContentLoaded', () => {
+            const coopData = localStorage.getItem('coopData');
+            
+            if (!coopData) {
+                showSection('register-section');
+            } else {
+                showSection('login-section'); 
+            }
+            
+            // إضافة الوظائف المساعدة إلى نطاق النافذة لكي تعمل داخل الأقسام الديناميكية
+            window.addSale = addSale;
+            window.addExpense = addExpense;
+            window.generateReport = generateReport;
+            window.printReport = printReport;
+            window.saveMeeting = saveMeeting;
+            window.addItem = addItem;
+            window.generateVideo = generateVideo;
+            window.saveVideo = saveVideo;
+            window.saveSocials = saveSocials;
+            window.openSection = openSection; 
+            window.showSection = showSection; 
+
+            document.getElementById('langBtn').addEventListener('click', changeLang);
+            updateTexts();
+        });
+    </script>
+</body>
+</html>
