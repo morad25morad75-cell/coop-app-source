@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of المتعاون - Al-Muta'awin",
+  "description": "تطبيق إدارة أعمال شامل للمقاولات، يتضمن إدارة المبيعات، المخازن، المصاريف، التقارير المالية، وأدوات الذكاء الاصطناعي للترويج.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
